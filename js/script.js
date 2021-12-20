@@ -27,11 +27,15 @@ const movieDB = {
 };
 
 const promo_adv = document.getElementsByClassName('promo__adv'),
-      imgs = document.querySelectorAll('.promo__adv img'),
-      promo_bg = document.querySelector('.promo__bg'),
-      genre = promo_bg.querySelector('.promo__genre'),
-      movie_list = document.querySelector('.promo__interactive-list');
-imgs.forEach(function(element){
+    imgs = document.querySelectorAll('.promo__adv img'),
+    promo_bg = document.querySelector('.promo__bg'),
+    genre = promo_bg.querySelector('.promo__genre'),
+    movie_list = document.querySelector('.promo__interactive-list'),
+    formAdd = document.querySelector('.add'),
+    btnAccept = formAdd.querySelector('button'),
+    addingInput = formAdd.querySelector('.adding__input');
+
+imgs.forEach(function (element) {
     element.remove();
 });
 
@@ -39,10 +43,38 @@ genre.textContent = 'ДРАМА';
 
 promo_bg.style.backgroundImage = "url('img/bg.jpg')";
 
+function showListMovies() {
+    movieDB.movies.sort();
+    movieDB.movies.forEach((item, i) => {
+        //movie_list.innerHTML += `<li class="promo__interactive-item">${i}. ${item} <div class="delete"></div></li>`;
+        movie_list.insertAdjacentHTML('beforeend', `<li class="promo__interactive-item">${i + 1}. ${item}<div class="delete"></div></li>`);
+    });
+}
+
 movie_list.innerHTML = "";
 
-movieDB.movies.sort();
-movieDB.movies.forEach((item, i) => {
-   //movie_list.innerHTML += `<li class="promo__interactive-item">${i}. ${item} <div class="delete"></div></li>`;
-    movie_list.insertAdjacentHTML('beforeend',`<li class="promo__interactive-item">${i+1}. ${item}<div class="delete"></div></li>`);
-});
+showListMovies();
+
+console.log(addingInput.textContent);
+
+const disableReload = (e) => {
+    e.preventDefault();
+};
+formAdd.addEventListener('click', disableReload);
+
+const btnAcceptClick = (e) => {
+
+    if(addingInput.value.length > 21){
+        movieDB.movies.push(addingInput.value.substr(0, 21) + '...');
+    }else{
+        movieDB.movies.push(addingInput.value);
+    }
+    
+    movie_list.innerHTML = "";
+    showListMovies();
+};
+btnAccept.addEventListener('click', btnAcceptClick);
+
+
+
+
